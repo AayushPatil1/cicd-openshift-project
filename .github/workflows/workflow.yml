@@ -1,5 +1,6 @@
 
 
+
 name: CI validation
 
 on:
@@ -31,5 +32,5 @@ jobs:
         run: flake8 app tests
 
       - name: Run unit tests with nose
-        run: nosetests -v
-
+        run: |
+          python -c "import collections, collections.abc, sys; collections.Callable = collections.abc.Callable; import nose; sys.argv = ['nosetests', '-v']; nose.run()"
