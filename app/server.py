@@ -1,5 +1,4 @@
 
-
 """Minimal HTTP service for the CI/CD assignment."""
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -22,7 +21,16 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+        print(f"GET {self.path} {status}", flush=True)
+
+    def log_message(self, format, *args):
+        """Keep HTTP request logs visible in the container logs."""
+        print(f"{self.address_string()} - {format % args}", flush=True)
 
 
 if __name__ == "__main__":
-    HTTPServer(("0.0.0.0", 8000), Handler).serve_forever()
+    print("service starting", flush=True)
+    server = HTTPServer(("0.0.0.0", 8000), Handler)
+    print("listening on 0.0.0.0:8000", flush=True)
+    print("SERVICERUNNING", flush=True)
+    server.serve_forever()
